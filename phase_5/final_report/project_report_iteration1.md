@@ -1,5 +1,5 @@
 
-## Introduction
+# Introduction
 
 The motivation for the present project is the problem of flight delays in the USA. It is a problem that has plagued this industry for some time.
 
@@ -21,7 +21,7 @@ In our report we will follow the various phases of our project and we will brief
 For each section there is the equivalent Jupyter Notebook where one can thoroughly inspect the codebase of the project 
 
 
-## Getting and storing the data
+# Getting and storing the data
 
 The data we are being handed over cover the range from 1987 to 2008. We chose to focus on a single year. We will capture all the seasonality that appears to be yearly, without complicating things too much.
 
@@ -36,35 +36,35 @@ For the specific details with respect the structure of the database, and the way
 
 This is the list of the variables in the flights csv – with which we will spend most of our time analysing:
 
-1. 	Year 	1987-2008
-2. 	Month 	1-12
-3. 	DayofMonth 	1-31
-4. 	DayOfWeek 	1 (Monday) - 7 (Sunday)
-5. 	DepTime 	actual departure time (local, hhmm)
-6. 	CRSDepTime 	scheduled departure time (local, hhmm)
-7. 	ArrTime 	actual arrival time (local, hhmm)
-8. 	CRSArrTime 	scheduled arrival time (local, hhmm)
-9. 	UniqueCarrier 	unique carrier code
-10. 	FlightNum 	flight number
-11. 	TailNum 	plane tail number
-12. 	ActualElapsedTime 	in minutes
-13. 	CRSElapsedTime 	in minutes
-14. 	AirTime 	in minutes
-15. 	ArrDelay 	arrival delay, in minutes
-16. 	DepDelay 	departure delay, in minutes
-17. 	Origin 	origin IATA airport code
-18. 	Dest 	destination IATA airport code
-19. 	Distance 	in miles
-20. 	TaxiIn 	taxi in time, in minutes
-21. 	TaxiOut 	taxi out time in minutes
-22. 	Cancelled 	was the flight cancelled?
-23. 	CancellationCode 	reason for cancellation (A=carrier, B=weather, C=NAS, D=security)
-24. 	Diverted 	1 = yes, 0 = no
-25. 	CarrierDelay 	in minutes
-26. 	WeatherDelay 	in minutes
-27. 	NASDelay 	in minutes
-28. 	SecurityDelay 	in minutes
-29. 	LateAircraftDelay 	in minutes
+1. Year 	1987-2008
+2. Month 	1-12
+3. DayofMonth 	1-31
+4. DayOfWeek 	1 (Monday) - 7 (Sunday)
+5. DepTime 	actual departure time (local, hhmm)
+6. CRSDepTime 	scheduled departure time (local, hhmm)
+7. ArrTime 	actual arrival time (local, hhmm)
+8. CRSArrTime 	scheduled arrival time (local, hhmm)
+9. UniqueCarrier 	unique carrier code
+10. FlightNum 	flight number
+11. TailNum 	plane tail number
+12. ActualElapsedTime 	in minutes
+13. CRSElapsedTime 	in minutes
+14. AirTime 	in minutes
+15. ArrDelay 	arrival delay, in minutes
+16. DepDelay 	departure delay, in minutes
+17. Origin 	origin IATA airport code
+18. Dest 	destination IATA airport code
+19. Distance 	in miles
+20. TaxiIn 	taxi in time, in minutes
+21. TaxiOut 	taxi out time in minutes
+22. Cancelled 	was the flight cancelled?
+23. CancellationCode 	reason for cancellation (A=carrier, B=weather, C=NAS, D=security)
+24. Diverted 	1 = yes, 0 = no
+25. CarrierDelay 	in minutes
+26. WeatherDelay 	in minutes
+27. NASDelay 	in minutes
+28. SecurityDelay 	in minutes
+29. LateAircraftDelay 	in minutes
 
 
 
@@ -87,7 +87,7 @@ There are four automatically created auto-indexes, each for every table along th
 By building our database we have a source that is ready to be queried, we have a way to make permanent changes to the data, and we can add more data in the future if we wish to so. All in all, we are ready to proceed with our next steps.
 
 
-## First insights in the data
+# First insights in the data
 
 We focus on the flights since this will be our main focus. In the Jupyter Notebook one can find the coding details for the discussion below.
 
@@ -99,7 +99,7 @@ Then come the columns that capture time aspects of a flight in the various stage
 Finally there are the columns that specifically deal with Cancelled and Diverted flights,  'Cancelled', 'CancellationCode', 'Diverted'.
 
 
-####The rules data follows
+###The rules data follows
 
 The group that captures time exhibits specific relation between the columns that we should further scrutinise. These relations start with logical relations between the different stages of a flight.
 The planned flight time, in minutes, is the difference between  the planned arrival and departure times.
@@ -133,11 +133,11 @@ We should stress this point: all rows, with the mentioned exceptions, do follow 
 
 
 
-####Data quality and cleaning
+###Data quality and cleaning
 
 In general the dataset we work with is well curated. For almost all the columns, there are no missing values – only non applicable. For the columns that we could check, the values also seem meaningful. For example, for all Origin Destination pairs, the distance between them has been the same for all flights, or the dates do take valid values. In most cases we have found values that seem unrealistic, there might be good explanations. Let us see in more detail.
 
-####Strange rows, with plausible explanations
+###Strange rows, with plausible explanations
 
 When we first examine a column we check for empty values and the range these values have. It is not always trivial to decide whether an extreme value we observe in a column is valid or not. There are statistical tests to test for outliers, but in many cases things are more subtle.
 Take for example ArrTime, that captures the time the plane is in the air. It ranges from 0 all the way to 1350 minutes (Month:5 Day:24 Carrier:HA Flight: 21 Plane:N580HA) or almost a whole day. Obviously a plane in a domestic flight that usually lasts a bit more than a couple of hours, could not have stayed than long in the air. Now imagine the plane had to make a forced landing for some reason, and stay grounded, before finally make it to the final destination. This does not count as a diverted flight, nor as a canceled one. There is no way to encode the information in an other way, apart from setting the delay to an impossible 1034 minutes and adjusting all the fields so that integrity is maintained, but getting the AirTime to 1350. Therefore we have an impossible value, which is still meaningful from the point of view of the integrity of the data, as they are maintained by the data owner.
@@ -146,7 +146,7 @@ Take for example ArrTime, that captures the time the plane is in the air. It ran
 
 
 
-#### Data description findings
+###Data description findings
 
 Our findings replicate these of the literature and the presentations of the ASA competition. 
 The variation of flights and delays along certain dimensions – yearly, weekly, with respect the Origin, or the Carrier - follow the patterns reported in the literature[^2].
@@ -157,10 +157,10 @@ The data report contains a detailed list of these findings which can be traced i
 
 
 
-## The modelling
+# The modelling
 In this section we will talk about the way we set up and evaluated the first preliminary model, in our effort to provide an answer to the question of what determines flight delays. Our approach is to divide the overall problem into smaller parts and try to solve the easier parts first. We will focus on one kind of delay, the LateAircraftDelay, for reasons we explain below. In specific we have framed the model in terms of a classification problem; we will try to predict whether LateAircraftDelay will be positive or not.
 
-#### The main idea: some observations
+### The main idea: some observations
 There is an effect we have seen mentioned in the sources we have found, but also in the data we have analysed. This effect is the delay propagation.
 
 >Delay propagation occurs when a delay at a flight stage causes a ripple effect in the subsequent stages of a flight. Delays propagate into and out of an airport. Arrival delays are tracked at the end of each flight leg traveled by the same aircraft identified by a tail number[^3].
@@ -168,13 +168,13 @@ There is an effect we have seen mentioned in the sources we have found, but also
 
 The main observation is that flights use planes. By switching the focus to planes we view flights as stops in the itinerary of a plane. Then a delay in one leg, might be propagated along the rest of the flights. This shift in focus will allow us to represent our data in a different way.
 
-####the conceptual model 
+###the conceptual model 
 
 At the beginning of the day a plane has a list of destinations that will fly to, and the schedule that should be followed. Departing from point A, arriving at point B, going through disembarkation and embarkation processes, and then departing for destination C (might be same as A in case of return flight). This is the schedule. From the point of view of destination C, we look back  to  B and we try to gauge whether there will be a delay, arriving at final destination C.
 
 
 
-####the features that capture the concepts
+###the features that capture the concepts
 
 We use certain features in order to capture the above concepts.
 
@@ -189,7 +189,7 @@ avg_flight_time_percent - here we get to other end of time_btwn_Arrivals. The av
 utilisation_percent - this is metric of how busy airports are. it is the division of the daily flights to and from a specific airport for a given day over the maximum observed flights at this airport. 
 
 
-####the modelling technique
+###the modelling technique
 
 As we have decided to set up a classification task, it is time to decide on the kind of the model to use. Our choice comes from the Decision Tree family of models. 
 These models are simple to understand, they can handle different types of data, without the need for extensive data preparation, and  they can handle large datasets, among other advantages.
@@ -198,7 +198,7 @@ The solution for these two problems is to grow multiple uncorrelated trees, and 
 is the Random Forest Classifier.
 
 
-####Model estimation and results
+###Model estimation and results
 In the python ecosystem, the scikit-learn library implements Decision Trees, and Random Forests,  using a version of the CART (Classification and Regression Trees) algorithm. 
 We have run a grid search, using some combinations parameter values for the algorithm. We have not performed an exhaustive search and we got the best parameter set to use with the algorithm.
 
@@ -213,14 +213,14 @@ Is our model any good? Yes it is. Compared to the random guess, the model has hi
 In summary, we can say we have a good result. With a simple, preliminary model, we have captured part of the delay causes, and there is evidence our models can improve.
 
 
-## Conclusions and next steps
+# Conclusions and next steps
 
 We have started out with the desire to be able to predict aircraft delays. Our path took us into learning new things about the data itself and the way it is modelled, and we verified the previous results about delays found in the literature. 
 
 With the observation that delays tend to propagate, we switch the focus from the individual flights to planes and their itineraries. In this way we managed to set up an train a model that is quite good in predicting when there will be no delay due a late aircraft, while it is not that accurate when predicting a delay. Still, it is much better than a random guess. This is good enough result for our first iteration of the project.
 
 
-####Next steps
+###Next steps
 What should we then do next? Well, there are four different dimensions that we work in. Starting with the last part we worked with we identify what could we do next:
 
 1 - we could spend more time on the model and re-examine the choices we made at that level. For example, in the decision tree family, there are other models available - see the AdaBoost, etc.  We mights have reasons to believe that a different algorithm could perform better.
@@ -234,10 +234,10 @@ There are two ways to approach the matter. Either we keep the model we have and 
 
 The decision for the next steps has of-course to be taken along the rest of the stakeholders.
 
-### Appendix
+## Appendix
 
 
-#### The software used and the corresponding versions:
+### The software used and the corresponding versions:
 
 - conda 4.6.11
 - Python 3.7.3
@@ -249,7 +249,7 @@ The decision for the next steps has of-course to be taken along the rest of the 
 - scikit-learn 0.20.3
 
 
-#### Content list for the project
+### Content list for the project
 
 phase1 
 

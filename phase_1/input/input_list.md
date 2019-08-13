@@ -1,36 +1,30 @@
 #The material to be used for this part
+
 The main goal here is to describe the triangle that is formed by the initial question, the relevant data, and the background/domain information.
 
 
 ##Initial question
-The competition description from the main page
-intro_to_the_project.txt
-http://stat-computing.org/dataexpo/2009/
+
+The competition description from the [main page]
+(http://stat-computing.org/dataexpo/2009/)
 
 
 ##relevant data
-The data description from the competition page
-info_on_raw_data.txt
-http://stat-computing.org/dataexpo/2009/the-data.html
-and
-http://stat-computing.org/dataexpo/2009/supplemental-data.html
+
+The data description from the competition page on [main](http://stat-computing.org/dataexpo/2009/the-data.html) and [supplemental](http://stat-computing.org/dataexpo/2009/supplemental-data.html) data.
 
 
 ##Background/Domain information
 
 ###Examples of analysis of similar data
 
-Delays of US domestic flights: trends and predictability
-https://srcole.github.io/2017/04/02/flight_delay/
+[Delays of US domestic flights](https://srcole.github.io/2017/04/02/flight_delay/): trends and predictability
 
-Predicting Airline Delays
-https://jessesw.com/Air-Delays/
+[Predicting Airline Delays](https://jessesw.com/Air-Delays/)
 
-NYC Flight Data Analysis
-http://soutik.github.io/NYC-Flight-Analysis/
+[NYC Flight Data Analysis](http://soutik.github.io/NYC-Flight-Analysis/)
 
-Predicting flight delays [Tutorial ]
-https://www.kaggle.com/fabiendaniel/predicting-flight-delays-tutorial
+Predicting flight delays - [Tutorial ](https://www.kaggle.com/fabiendaniel/predicting-flight-delays-tutorial)
 
 
 
@@ -64,15 +58,12 @@ https://en.wikipedia.org/wiki/Change_of_gauge_(aviation)
 
 ###Journalist coverage of flight delays
 
-Flight delays are costing airlines serious money - Mashable.com
-https://mashable.com/2014/12/10/cost-of-delayed-flights/?europe=true
+Flight delays are costing airlines serious money - [Mashable.com](https://mashable.com/2014/12/10/cost-of-delayed-flights/?europe=true)
 
-Airlines Themselves Cause More Flight Delays Than Anything Else, Including Weather - Popular Mechanics
-https://www.popularmechanics.com/flight/a22504/airlines-cause-flight-delays/
+Airlines Themselves Cause More Flight Delays Than Anything Else, Including Weather - [Popular Mechanics](https://www.popularmechanics.com/flight/a22504/airlines-cause-flight-delays/)
 
 
-###Results of the poster competition
-http://stat-computing.org/dataexpo/2009/posters/
+###Results of the poster [competition](http://stat-computing.org/dataexpo/2009/posters/)
 
 
 ###Other papers
