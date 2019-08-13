@@ -1,0 +1,65 @@
+﻿
+-- This file is meant to be used by SQLite to create the tables for the air flights project database. 
+-- For a more detailed documentation of the database, see the relevant file in the same as this file's folder.
+
+create table IF NOT EXISTS flights (
+  -- ID INTEGER PRIMARY KEY AUTOINCREMENT
+  FlightYear int not null, -- part of the composite key 
+  FlightMonth int not null, -- part of the composite key
+  FlightDay int not null, -- part of the composite key
+  DayOfWeek int,
+  DepTime  varchar(16),
+  CRSDepTime varchar(16) not null, -- part of the composite key
+  ArrTime varchar(16),
+  CRSArrTime varchar(16),
+  UniqueCarrier varchar(7) not null references carriers(Code), -- primary key in the carriers table
+  FlightNum int not null, -- part of the composite key
+  TailNum varchar(8)  references planes (TailNum), -- primary key in the planes table
+  ActualElapsedTime int,
+  CRSElapsedTime int,
+  AirTime int,
+  ArrDelay int,
+  DepDelay int,
+  Origin varchar(4) not null references airports(IATA), -- primary key in the airports table
+  Dest varchar(4) not null references airports(IATA), -- primary key in the airports table
+  Distance int,
+  TaxiIn int,
+  TaxiOut int,
+  Cancelled int,
+  CancellationCode varchar(1),
+  Diverted int,
+  CarrierDelay int,
+  WeatherDelay int,
+  NASDelay int,
+  SecurityDelay int,
+  LateAircraftDelay int,
+  PRIMARY KEY( FlightYear, FlightMonth, FlightDay, UniqueCarrier, FlightNum, TailNum, CRSDepTime, Origin ) 
+);
+ 
+ create table IF NOT EXISTS planes(
+  TailNum varchar(8) primary key ,
+  Type varchar(20),
+  Manufacturer varchar(30),
+  Issue_date varchar(10),
+  Model varchar(20),
+  Status varchar(20),
+  Aircraft_type varchar(25),
+  Engine_type varchar(15),
+  Plane_year int
+ );
+ 
+ 
+ create table IF NOT EXISTS airports(
+   IATA varchar(4) primary key,
+   Airport_name varchar(42),
+   City varchar(35),
+   US_State varchar(2),
+   Country varchar(20),  
+   Latitude real,
+   Longitude real 
+ );
+ 
+ create table IF NOT EXISTS carriers(
+   Code varchar(8) primary key,
+   Full_name varchar(84)
+ );

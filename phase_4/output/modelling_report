@@ -1,0 +1,91 @@
+﻿#Intro
+When we first talked about drawing  conclusions from data, we talked about four distinct levels that we go through until arriving at a trained model First comes the main question / application field, then comes the choice of Machine Learning Task (classification, regression, etc.), then the choice of modelling technique to implement the task (neural networks, linear regression, etc.), and finally we the specific algorithm in order to evaluate our model.
+The aim of the modelling report is to walk the reader through all these choices and report the results
+
+
+#The main idea
+##some observations
+There is the phenomenon of delay propagation. It is also a question in the call. LateAircraftDelay somehow captures it. there is evidence that initial delays are being propagated during the day - see delta boss
+ 
+##the transformation from flights to planes
+The main observation is that flights use planes. By switching to planes we view flights as stops in the itinerary of a plane. Then a delay in one leg, might be propagated along the rest of flights
+
+
+#Setting the stage for the modelling
+From the outset of this project we have identified flight delays as the main target of our analysis. Since our first contact with the data, we have come some way into an initial understanding of the problem and the data. We are in out first iteration, therefore what we mostly need is a first simple model. Given  the observations we mentioned earlier, we are ready to identify a first model we can begin with.
+
+
+##the conceptual model 
+At the beginning of the day a plane has a list of destinations that will fly to, and the schedule that should be followed. Departing from point A, arriving at point B, going through disembarkation and embarkation process, and then departing for destination C (might be same as A in case of return flight). This is the schedule. From the point of view of destination C, we look back  to  B. From the moment the plane should arrive at B, until the moment it should arrive at C, there are certain phases that might be relevant for the delay in arriving at C:
+1 - If there is a significant delay in arriving at B, we expect that there might be a delayed departure from B and finally a delayed arrival in C
+2 - there is evidence that airlines take into account possible delays and pad the planned times by adding some more time in the schedule. We should account for that
+3 - there is also evidence that crowded airports experience more delays. a late aircraft might be able to arrive in time, if there are no other obstructions. Otherwise, some new delay category will be positive, but also a LateAircraftDelay will show up
+
+
+
+#The features
+##how each feature is a metric for the model
+We use certain features in order to capture the above concepts
+LateAircraftDelay - it is the target we want to explain. It is the what is reported for each flight
+
+time_btwn_Arrivals - this does not appear directly in the final dataset, but participates in the computation of two other features. It is the time planned by the airline from the arrival at airport B, all the way to arriving at airport C. Since delays are the difference between the planned and the actual arrival it makes sense to use it in these cases:
+
+previous_ArrDelay_percent - this is the arrival delay at the previous destination, in our case destination B. the ArrDelay at B is measured in minutes. What we do here is to divide the time_btwn_Arrivals. In this way get a metric of how much the ArrDelay at B, has reduced the available time left to arrive at C according to plan. The ArrDelay of x minutes does not say much on its own. It is different if it has used 50 percent of the available time to arrive at C, or just 10 percent 
+
+avg_flight_time_percent - here we get to other end of time_btwn_Arrivals. The avg_flight_time measures the usual time a flight takes from point B to point C. By the division with time_btwn_Arrivals, we get the percentage of the usual flight duration over the scheduled time for the plane's itinerary. 
+
+utilisation_percent - this is metric of how busy airports are. it is the division of the daily flights to and from a specific airport for a given day over the maximum observed flights at this airport. If the maximum during the year is x and the daily flights are at, say, 60 percent of x we expect the airport to be much less crowded, than if it were at 95 percent of x.
+
+The features we have are suitable for both classification and regression. We choose to classify, that is to predict if there will be LateAircraftDelay for a flight or not. We do that because the result of a classification model is conceptually more clear to grasp: a prediction, in our case we have only two classes, is either correct or erroneous. For that reason, we turn the LateAircraftDelay into a binary feature to use with classification - continuous variables cannot be the target of classification.
+
+
+the construction of the features, step by step
+LateAircraftDelay : we get that directly from our database, and encode it as True when it is greater than 0 and False otherwise.
+
+time_btwn_Arrivals : for that, we bring together all the flights for a certain airplane, and sort then according to time. Then it is easy to get the difference between successive arrivals. Note that in case the arrival airport of the previous flights and the one of the current are different, thee metrics do not make sense and for that we filter out these records.
+
+previous_ArrDelay_percent : we get that in the same way as before, by linking the sequential flights of a plane. The extra step is to divide by the time_btwn_Arrivals for reasons we explained directly above. 
+
+avg_flight_time_percent : for this we simply get all flight for each carrier and origin - destination pair, and then we compute the avg_flight_time. After that, by dividing with time_btwn_Arrivals, we get the percent
+
+utilisation_percent : this one is the most complicated to arrive at. We first have to get the maximum daily flights for each airport, then the daily flights and finally compute the percentage of daily flights over the observed yearly maximum.
+
+
+
+#The kind of model
+As we have decided to set up a classification task, it is time to decide on the kind of the model to use. Our choice comes from the Decision Tree family of models. A simple Decision Tree works roughly like that. For any instance in the dataset, the algorithm uses the available features - one at a time - in order to classify the instance to a class. That process creates an inverted tree like structure that starts from the root, with the nodes - branches representing the decisions, while the leafs contain the classified instances.
+These Trees are simple to understand, they can handle different types of data, without the need for extensive data preparation, and  they can handle large datasets, among other advantages.
+Their main two disadvantages are their sensitivity to data variations, since a small difference in the data, can lead to widely different tress, while unbounded trees might "learn the noise", and thus exhibit a low in sample error, but much greater out of sample error.
+The solution for these two problems is to grow multiple uncorrelated trees, and combine their predictions into a single one. In this way the in sample error, increases a bit and we also lose the easy interpretability of a single tree, but the out of sample error decreases by a lot. The Random Forest Classifier uses two methods to grow these trees. Instead of using the data as is, the algorithm creates bootstrap samples with replacement(bagging), thus introducing a certain degree of variation in  the trees grown. Additionally each time the algorithm has to make a decision, it uses a random subset of the features, thus increasing even more the variation of the trees grown. With these two tricks, the individual trees are not optimal, yet their ensemble is.
+ 
+
+
+#Model estimation and results
+In the python ecosystem, the scikit-learn library implements Decision Trees, and Random Forests,  using a version of the CART (Classification and Regression Trees) algorithm. 
+We have run a grid search, using some combinations parameter values for the algorithm. We have not performed an exhaustive search. This is the what we have found as the best parameter set, using the default accuracy metric for Random Forests:
+RandomForestClassifier(bootstrap=True, class_weight='balanced',
+            criterion='entropy', max_depth=3, max_features='auto',
+            max_leaf_nodes=None, min_impurity_decrease=0.0,
+            min_impurity_split=None, min_samples_leaf=100,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            n_estimators=100, n_jobs=None, oob_score=True,
+            random_state=None, verbose=0, warm_start=False)
+
+About the results
+The Random Forest Classifier has a feature importance metric that captures how much a feature has helped decrease the impurity of the classification. For our model the previous Arrival delay, is the single most important feature with about 75 percent of the importance. The airport utilisation is almost 0, while the rest 25 goes to the average flight time.
+Yet, how good the results are? We have to be careful since we have a model with strongly imbalanced classes. The LateAircraftDelay is True in around 10 percent of the flights, therefore even a random guess that a flight will not be delayed due to this reason would be correct in 90 percent of the cases. Therefore we report the confusion matrix of the model along with a confusion matrix for a random guess. The matrix splits our test data into four compartments, which are, clockwise, predicted and true negative - A, predictive positive and true negative -B, predicted and true positive -C , and finally predicted negative and true positive -D. We also provide the classification report that computes certain statistics out the confusion matrix. Let us see in greater detail.
+Is our model any good? Yes it is. Compared to the random guess, the model has higher True Negatives and  True Positives (A and  C), while at the same time lower False Negatives and False Positives (D and B). Therefore we now we have captured some of the true processes with our model. Note that the proportional reduction in the False Negatives (D) was much larger than the reduction in the False Positives (B). There might be a good reason for that. Recall that LateAircraftDealy is only one of the delay causes. It is probable, that when an airplane is late for the previous destination and wouldn't make it on time for the current one - and therefore our model predicts that LateAircraftDelay will be greater than 0 - still get a LateAircraftDelay equal to zero, if another delay cause steps in. For example, because of bad weather that aircraft is not allowed to take off from the previous destination. In that case LateAircraftDelay will be zero, and WeatherDelay will be positive.
+In summary, we can say we have a good result. With a simple, preliminary model, we have captured part of the delay causes, and there is evidence our models can improve.
+
+
+
+#Next steps
+What should we do next? Well, there are four different dimensions that we work in. Starting with the last part we worked with:
+
+1 - we could spend more time on the model and re-examine the choices we made at that level. For example, in the decision tree family, there are other models available - see the AdaBoost, etc.  We mights have reasons to believe that a different algorithm could perform better.
+
+2 - we could improve the quality of the features trying to reduce noise, spot outliers, etc. During the clean – summarise - validate phase of our project, we have spotted some anomalies with the data. At first we have not intervened because we could see that some times seemingly erroneous data was simply codifying information that could not otherwise fit the data. We could revisit these cases and make choices and possibly find others too. What is for sure is that by spending time on feature quality we could improve the classification results.
+
+3 - by taking a step even further, we could re-think the metrics we have constructed in our effort to capture the concepts in our initial model. For example, we have not included as a separate feature, that actual time a plane has to spent for the boarding procedures from the time it lands to the previous effort, to the time it becomes ready to depart again. In view also of the low importance of the airport utilisation, it could be more profitable to pay more attention to these processes 
+
+4 - finally, we could go all the way back to our initial model and change it - slightly or completely. In any case, since we have concentrated on part of the delay causes, we will eventually get there. For example, we could change focus from planes to flights and try guess the connections flights have. Airlines frequently sell flight routes that have multiple legs, and get passengers and their luggage from one plane to another. Delays in one flight, will create delays in another, but these will, most probably, show up as CarrierDelay. There are two ways to approach the matter. Either we keep the model we have and try to make to incorporate new aspects - and features, or we can explore an orthogonal direction and start anew, hoping that we will merge the different concepts at a later stage.

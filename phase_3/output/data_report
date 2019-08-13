@@ -1,0 +1,148 @@
+﻿The groups of the columns
+
+Since we try to understand data, let us put them together in conceptual groups. This will help us to see the relations between the various columns.
+First come the four columns that capture the date. 'FlightYear', 'FlightMonth', 'FlightDay', 'DayOfWeek' - this last encodes week days. 
+
+Then I would place those that identify the infrastructure and the specific flights, namely 'UniqueCarrier', 'FlightNum', 'TailNum', 'Origin', 'Dest', 'Distance'. These are at the heart of the analysis and the identification of flights into many different groups, across airports, carriers, etc.
+
+Then go the columns that capture time aspects of a flight in the various stages it goes through - from planning to the final arrival. There are two main distinctions: Departure vs Arrival, and planned(CRS) vs actual.   'DepTime', 'CRSDepTime', 'ArrTime', 'CRSArrTime', 'ActualElapsedTime', 'CRSElapsedTime', 'AirTime', 'ArrDelay', 'DepDelay',  'TaxiIn', 'TaxiOut'. All these go finally down to ArrDelay, that captures the arrival delays - which is out main interest here.
+
+ The analysis of the delays  goes even further through the five columns 'CarrierDelay', 'WeatherDelay', 'NASDelay', 'SecurityDelay', 'LateAircraftDelay'. These break down the overall delay into the various categories.
+
+Finally there are the columns that specificaly deal with Cancelled and Diverted flights,  'Cancelled', 'CancellationCode', 'Diverted'.
+
+
+The rules data follows
+
+The group that captures time exhibits specific relation between the columns that we should further scrutinise. These relations start with logical relations between the different stages of a flight.
+The planned flight time, in minutes, is the difference between  the planned arrival and departure times 
+1. CRSActualElapsedTime = CRSArrTime – CRSDepTime
+
+There is of course the actual counterpart, where the actual flight time, in minutes, is the difference between arrival and departure times
+2. ActualElapsedTime = ArrTime – DepTime
+
+Delays are then defined as the difference between the planned and the actual times, both for departure and arrival
+3. DepDelay = DepTime - CRSDepTime 
+4. ArrDelay = ArrTime – CRSArrTime
+
+Some of the above is being further broken down. Actual elapsed time, from the moment the plane leaves the gate to the moment it arrives at the gate, is being broken down as: 
+5. ActualElapsedTime = TaxiOut + AirTime + TaxiIn 
+while arrival delay is being broken down in five parts:
+6. ArrDelay = CarrierDelay + WeatherDelay + NASDelay + SecurityDelay + LateAircraftDelay
+
+These are the obvious candidates yet, there is derived relation that plays a really important role in the flights table. By combining 1,2,3, and 4 we derive a non obvious 7th relation that not only holds mathematically, but which defines all the rows in the flights table, with the exception of Diverted and Cancelled flights that do not have all the fields.
+7. (ArrDelay - DepDelay) = (ActualElapsedTime - CRSElapsedTime )
+
+We should stress this point: all rows, with the mentioned exceptions, do follow the above formula. Note that this relation connects all the time related fields in the table and somehow provides an integrity check for each individual row - and being applied to every row, to the whole table. 
+
+
+Strange rows, with plausible explanations
+
+When we first examine a column we check for empty values and the range these values have. It is not always trivial to decide whether an extreme value we observe in a column is valid or not. There are statistical tests to test for outliers, but in many cases things are more subtle.
+
+Take for example ArrTime, that captures the time the plane is in the air. It ranges from 0 all the way to 1350 minutes (Month:5 Day:24 Carrier:HA Flight: 21 Plane:N580HA) or almost a whole day. Obviously a plane in domestic flight that usually last a bit more than a couple of hours, could not have stayed than long in the air. Now imagine the plane had to make a forced landing for some reason, and stay grounded, before finally make it to the final destination. This does not count as a diverted flight, nor as a canceled one. There is no way to encode the information in an other way, apart from setting the delay to an impossible 1034 minutes and adjusting all the fields so that integrity is maintained, but getting the AirTime to 1350. Therefore we have an impossible value, which is still meaningful from the point of view of the database.
+
+Take another example (Month:1 Day:5 Carrier:AA Flight:2398 Plane:N622AA), where the planned time for the flight is 42 minutes, while for this route the usual flight time is six time more - 242 minutes. Is it possible that suddenly a plane will reach supersonic speed? It seems that the flight was delayed for that long that it departed the next day. The planned departure time did not change, so the calculations showed an unrealistic flight time. Once again, there is a impossible but, in a sense, meaningful value. 
+
+
+Data quality and cleaning
+With the exception of 7 flights that did not have a TailNum, there are no missing values. Wherever there is a null value, it stands for Non Applicable. For example Diverted and Cancelled flights do not have arrival related fields.
+We have already talked of many cases where impossible values, seem to carry meaning. We have not managed to clarify whether this is the case for all these groups, so we cannot exclude the possibility of input errors. It is indicative though that certain columns (see below, fact30), such as distance, are consistent without any apparent mistake - for every pair of origin destination the distance is always the same. We can interpret that as an indication that indeed all the values are meaningful: the trouble is that the meaning is not what the definitions of the columns assume - there is no other way though to encode information and make it fit into the fixed schema of a relation - table. Therefore it is not advisable to flag any individual record as erroneous and proceed with changing its values. We should rather defer these choices to a latter stage, and decide on a per case basis, keeping in mind the specific use of the records.
+
+
+Summary of the findings
+
+Our findings replicate these of the literature and the presentations of the ASA competition.
+The main issue is the distribution of delays, along the different axis: monthly, daily, across delay category, across carriers, etc. What follows is a detailed account of the things we have found. The list follows closely the notebook.
+
+
+
+
+
+# Fact1: 7009724 observations in flights
+
+# Fact2: there are no missing values for FlightMonth
+
+# Fact3: Relatively little variation for FlightMonth when analysed per month
+
+# Fact4: there are no missing values for FlightDay
+
+# Fact5: More variation for FlightDay when analysed per day. Weekly variation observable
+
+# Inference 1: The data seems to be distributed across the year. Most probably there are not, at least not visibly, missing flights
+
+# Fact6: There are 136246 (1.9%) nulls for departure times. We need to confirm whether these are missing or not applicable
+
+# Fact7: Whenever Departure Time is missing, the flight has been cancelled. All the nulls are effectively non applicable values
+
+# Fact8: The range of DepTime is within the 24 hours
+
+# Fact9 : No missing values for planned departures
+
+# Fact10: The range of CRSDepTime is within the 24 hours
+
+# Fact11: There are 151649 (2.1%) nulls for arrival times. We need to confirm whether these are missing or not applicable
+
+# Fact12: Arr Time is null (151649) either because the flight was Cancelled, or Diverted (sum = 151649)
+
+# Fact13: No flight is Cancelled and Diverted at the same time
+
+# Fact14: The range of ArrTime is within the 24 hours
+
+# Fact15: No missing values for planned arrivals
+
+# Fact16: The range of CRSArrTime is within the 24 hours
+
+# Fact17: There are no missing values for carriers
+
+# Fact18: There are 20 carriers in a fairly competitive market, with market shares less than 10% for 19 of them.
+
+# Fact19: There are no missing values for flight numbers
+
+# Fact20: The flight numbers range from 1 to almost 9999, which is the maximum allowed.
+
+# Attention1: We made a mistake to load empty strings in TailNum, without transforming them into None. There are 7 missing values
+
+# Fact21: There are 154699 (2.2%) nulls for arrival times. We need to confirm whether these are missing or not applicable
+
+# Fact22: ActualElapsedTime is null (154699) either because the flight was Cancelled, or Diverted (sum = 154699)
+
+# Fact22a: There are 844 missing values for planned elapsed time that follow a pattern. Split among Cancelled and Diverted, and within a certain date range - until September
+
+# Fact22b: For CRSElapsedTime, time range visibly out of bounds with many flights even with negative flight durations
+
+# Fact23: There are no missing values for either Cancelled, or Diverted
+
+# Fact24: There are 17265 diverted and 137434 cancelled flights. Both take values 0 and 1.
+
+# Fact25: There is a group of 3050 flights that stand out for, at least, two reasons. They have a TaxiIn time, and are concentrated in only three consecutive months 
+
+# Fact26: An arrival delay is being reported if and only if the flight is neither Cancelled or Diverted. The value is not applicable in 154699 flights
+
+# Fact27: There is a group of 1188 flights that, as before stand out for, at least, two reasons. They have a departure delay although cancelled, and are concentrated in only three consecutive months, exactly as before
+
+# Fact28: A dozen airports have the vast majority of the flights flown from and into them
+
+# Fact29: There are 5365 different direct routes. Again, a handful of routes attract the majority of flights
+
+# Fact30: There are no missing values for Distance, while the entries are consistent
+
+# Fact31: Poisson-like distribution for bot, with longer tail for TaxiOut, shorter for TaxiIn. 
+
+# Fact32: No TaxiIn for Cancelled and Diverted. No TaxiOut for Cancelled
+
+# Fact33: The distribution of Cancellation across the categories
+
+# Fact34: 21.8% of all flights experience some delay
+
+# Fact35a: The total delay looks like following a power law distribution. Individual delay causes follow similar pattern, but with important peculiarities ...
+
+# Fact35b: ... but when we plot all the delays, and not only the reported ones, the picture is different.
+
+# Fact36: When there is a delay, there is at least one delay type, past the 15 minutes threshold
+
+# Fact37: NAS, LateAircraft and Carrier, amount for the majority of delay occurrences
+
+# Fact 38: For the majority of flights over a route for the same carrier, the observed differences in planned flight time seem normal. Yet, there is an amount of flights, some of which we have seen earlier, that do not seem normal.
+
+# Fact39: In cases of long delays, some fields get updated for the new scheduled flight, while others do not.

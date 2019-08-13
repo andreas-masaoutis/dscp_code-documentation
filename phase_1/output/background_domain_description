@@ -1,0 +1,71 @@
+﻿The aim here is to put together some of the stylised facts about flights and flight delays that we have come across. The input list provides a detailed account of the various sources used. For the time being we do not aim at an exhaustive 'literature review' but rather at pointing at some central findings that we should verify in our analysis, along some insights that should prove useful for the next stages of our project.
+
+
+ANALYSIS OF AIRCRAFT ARRIVAL AND DEPARTURE DELAY CHARACTERISTICS
+The Bureau of Transportation Statistics (BTS) compiles delay data for the benefit of passengers. They define a delayed flight as one in which the aircraft fails to release its parking brake less than 15 minutes after the scheduled departure time. (page 2)
+
+
+Total Delay Impact Study
+Between 2002 and 2007, as the air transport system recovered from the 9/11 attacks, scheduled airline flights increased about 22 percent, but the number of late-arriving flights more than doubled. Since 2007, traffic and delays have declined somewhat because of the recession, but the FAA expects growth to resume, with air carrier flight traffic reaching 2007 levels by 2012, and growing an additional 30 percent by 2025. It is widely recognized that delay increases nonlinearly as demand approaches the capacity in the system (page 1)
+
+
+An airline might start the process of scheduling a flight by determining an ideal flight departure time (IDT)... the airlines will typically increase scheduled flight times over unimpeded ones in order to account for delays resulting from flight restrictions imposed to organize traffic, congestion, and a variety of other factors. We call this added time, the schedule buffer (SB)... Of course, the type of delay most typically discussed occurs when the arrival is later than scheduled... Such flight delay against schedule (FDS), like SB, reflects excess travel time much of which is related to congestion in the air transportation system. However, while SB is known in advance for a particular flight, FDS is not. (page 5-6)
+
+
+Air Travel Consumer Report
+
+AIR TRAVEL CONSUMER REPORT TABLE 9. CAUSES OF DELAY, BY CARRIER DECEMBER 2016 (page 23) -- detail of the whole tablle
+
+Carrier 	Ontime 	AIR-CARRIER-DELAY 	NAS-DELAY
+HAWAIIAN	85.11%		7.83%		0.13%
+ALASKA		76.11%		4.40%		9.85%
+
+
+AIR TRAVEL CONSUMER REPORT TABLE 10. OVERALL CAUSES OF DELAY DECEMBER 2016
+Ontime: 75.62%
+Cancelled: 1.62%
+Diverted: 0.27%
+Air Carrier Delay: 6.59% 
+Extreme Weather Delay: 0.70% 
+National Aviation System Delay: 6.70% 
+Security Delay: 0.04%
+Late Arriving Aircraft Delay: 8.46%
+(page 23)
+
+
+Congestion in the sky: Visualising domestic airline traffic with SAS (pdf, 550k). Rick Wicklin and Robert Allison, SAS Institute. (http://stat-computing.org/dataexpo/2009/posters/)
+
+There are certain temporal patterns in the distribution of delays
+On a yearly scale there are more delays in the summer and during holidays -
+On a daily scale, the least delays are recorded early in the day, they gradually increase, reach a peak around 7 pm, while they then gradually decrease.
+
+
+Flight delays are costing airlines serious money - Mashable
+https://mashable.com/2014/12/10/cost-of-delayed-flights/?europe=true
+The senior vice president of operations of Delta comments on the ripple effect delays can have: "The key is to not let yourself fall behind," Holtz says. "Keep this thing churning on time for as long as possible because there's a deteriorating effect on your entire system once it starts to go." 
+
+
+
+https://en.wikipedia.org/wiki/IATA_delay_codes - wikipedia
+Last, we comment on the full list of IATA, slightly less than 100, delay codes. These codes provide a long list of the possible delay causes, and it is a source of understanding of the complexity of the procedures for a flight.
+Delay Codes starting with 8 (air traffic control), mention:
+ATC restriction at destination
+ATC restriction en-route or capacity
+Delay Codes starting with 9 (miscellaneous), mention:
+Passenger or Load Connection, awaiting load or passengers from another flight. Protection of stranded passengers onto a new flight.
+Aircraft rotation, late arrival of aircraft from another flight or previous sector
+
+
+
+    3.4.2 Definition of Taxi Time
+
+    For Airport CDM purposes, taxi time is considered to be:
+
+        For arriving flights: the Actual taXi-In Time (AXIT) is the period between the Actual Landing Time (ALDT) and the Actual In-Block Time (AIBT)
+        For departing flights: the Actual taXi-Out Time (AXOT) is the period between the Actual Off-Block Time (AOBT) and the Actual Take Off Time (ATOT).
+
+    For calculation purposes within the CDM Platform, taxi times will be referred to as estimated taxi-in (EXIT) and estimated taxi-out (EXOT) as there is no requirement for a scheduled, actual or target taxi time.
+
+
+
+

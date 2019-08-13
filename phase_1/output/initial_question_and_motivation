@@ -1,0 +1,14 @@
+﻿Excerpts from: Total Delay Impact Study: A Comprehensive Assessment of the Costs and Impacts of Flight Delay in the United States Final Report October, 2010
+
+Flight delay is a serious and widespread problem in the United States. Increasing flight delays place a significant strain on the US air travel system and cost airlines, passengers, and society at many billions of dollars each year. (page vii)
+
+In addition to these direct costs imposed on the airline industry and its customers, flight delays have indirect effects on the US economy. Specifically, inefficiency in the air transportation sector increases the cost of doing business for other sectors, making the associated businesses less productive. (page vii)
+
+Thus there is a clear motivation for the analysis of delays
+
+The Statistical Computing and Statistical Graphics sections of the American Statistical Association held a competition on flight delays, in 2009. The data that has been made available were 'flight arrival and departure details for all commercial flights within the USA, from October 1987 to April 2008'. The competition focused on a graphical summary of the important features of the dataset and it provided a list of questions - possible approaches, but it left the definition vague so that teams would be free to try different approaches. It did not provide much more in that way of motivation. 
+This specific dataset, probably because it is rich, big enough, interesting, yet not that difficult to comprehend, has been used in other contexts too, such as Kaggle, with a focus on Machine Learning and on predicting delays.
+
+For our purposes here we define the question in this way: Can you predict delays? There is still ample space to try out different things. This question, could be coming from a start-up that wants to create a site/application, that could inform passengers on the possibility of their flight being delayed. Or Federal Agency, in the hope to gain a better understanding of the problem. 
+
+Most probably we will not be able to tackle the question immediately. At this stage, we cannot narrow it down, but we now that as we gain a better understanding of the data this broad question will become more specific.

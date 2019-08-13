@@ -1,0 +1,29 @@
+This file serves the role of documenting the database. It contains the choices for most of the design decisions the concern it.
+
+the tables
+There are four tables that correspond to the four kinds of csv files that we are given. One each for the flights, the carriers, the airports, and the planes.
+
+
+the columns
+The columns in the database tables correspond one to one with the csv columns. We make slight changes to the names and encoding for some columns. For example, in one case we changed the date representation to make it match to the one used by SQLite. 
+One can find a detailed description of the columns in phase_1 output - the date report, in the phase_2 database creation script, and of course on the online source page.
+
+
+the primary keys
+The three tables, apart from flights, have immediate candidates for their primary keys.
+For the airports the IATA code, uniquely identifies each row.
+Similarly for the carriers, the carrier code serves the same purpose.
+For the planes, the tail number (TailNum) is unique for each row.
+The flights table is a bit more complicated. No single column can be used to uniquely identify rows. We have created a rather long key, that we expect will provide uniqueness, even if we add more data.
+
+
+the normalisation
+The flights table is the one that is not in the 3rd normal form. Some of the non key columns have dependencies among them - origin, destination, carrier, flight number follow certain patterns. We choose though not to break donw the table any further, since it will be used mostly for reading operations. Adding more tables would slow things down through the necessary joins, but will not make a difference on the validity of the data returned.
+
+
+the connections
+In the flights table we designate the foreign keys of the other three tables, that correspond to columns in the flights. The UniqueCarrier column references the carriers table, the TailNum the planes, and the Origin and Dest, the airports table. 
+
+
+the indexes
+There are four automatically created auto-indexes, each for every table along the primary keys. For the flights table, that contains the vast majority of the observations we should add more indexes. Deciding on an index depends on the queries that we expect to run. We have chosen six columns that we expect to use heavily in the queries. These are: FlightDay, FlightNum, Origin, Dest, UniqueCarrier, TailNum  In case we need and extra indexes we can add them later.

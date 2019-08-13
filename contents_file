@@ -1,0 +1,68 @@
+README
+
+LICENCE
+
+contents_file
+
+phase_1 :
+	
+	input:
+		
+		- a list of introductory material 
+	
+	output:
+		
+		- intro to the project - intial question and motivation
+		- a report on the possible data to be used
+		- list of material with information on the subject matter of the airline industry and delays
+
+phase_2
+	
+	input:
+	
+		- the raw data (some files not uploaded on GitHub due to their size)
+	 
+	output:
+	
+		- the database populated with the raw data (not uploaded on GitHub due to its size)
+		- the documantation for the database
+		- the script for creating the database
+		- the overall report for that phase
+		- the Jupyter Notebook with the all the relevant code
+
+phase_3
+
+	input:
+	
+		- the database itself (UNIX like symbolic link)
+	
+	output:
+	
+		- the detailed data report
+		- the Jupyter Notebook with the all the relevant code
+
+
+	
+phase_4
+	
+	input:
+	
+		- the database itself (UNIX like symbolic link)
+	
+	output:
+		
+		- the data for the model building (not uploaded on GitHub due to its size)
+		- the trained model (not uploaded on GitHub due to its size)
+		- the grid search results (not uploaded on GitHub due to its size)
+		- the modelling report
+		- two Jupyter Notebooks one with the model preparation and another with model training
+		
+phase_5
+	
+	input:
+	
+		- in a sense, all the above
+	
+	output:
+	
+		- this very project report for iteration 1

@@ -1,0 +1,16 @@
+﻿The data we are being handed over cover the range from 1987 to 2008. We choose to focus on a single year. We will capture all the seasonality that appears to be yearly, without complicating things too much.
+
+We downloaded four csv files. The flights files is compressed using bzip2, so before using it we should decompressed it. The other files are the airports, the planes, and the carriers codes. The last three are small in size with a couple of thousand of observations each. The flights file is more than 600MB uncompressed. Bear in mind that this is a single year, and we have 21 years of data. This file alone fits in RAM and could be used as it is. But it already becomes cumbersome to juggle through all the csv files, in case we could like to use pieces of information from the other files. Besides, once we will try to get more data we will most probably run into memory issues.
+
+The solution is to use a database. Actually, the competition organisers have suggested so - http://stat-computing.org/dataexpo/2009/sqlite.html . We should use a relational database for a couple of reasons. They are more widespread and well documented with a lot of supportive material. The organisers have made the data available in a form that can immediately be used with such a system. The specific DB system that we will use is SQLite. It is powerful enough for our purposes, while less complicated than other similar systems. 
+
+A word of caution on datafile size. Some older systems and hard drives, because of the file system they used - FAT32, had limits on the maximum file size that seem restrictive with respect today's standards - 4GB. In our case, the database file will surely grow to way more than 4GB if we add all the flights from 1987 to 2008. In that case we should use the NTFS file system.
+
+In a separate text file one can find the specific decisions with respect the structure of the database, or the data model. In other words, the way in which our data will reside in the database system - the schema, in the language of relational databases. We load four tables, one for each scv file. We denote the connections between the files; the flights can be extended by using data from the other three. For more detailed descriptions consult database documentation.
+A couple of notes about the data itself. 
+
+We have spotted four duplicate rows in the flights csv. These are most probably a glitch and we did not import them into the flights table. See the Jupyter Notebook for more details.
+
+Because NULL values were encoded as 'NA' strings in the csv, we had to change these values upon insertion and use the SQLite native for NULL. 
+
+Data and time, are broken down into various columns. This makes sense, since different software systems handle time in different ways. This practice avoids errors because of conversions, and gives freedom to the programmer to manipulate the data at will. Also note that times are local, and as a result different airports have different local times.

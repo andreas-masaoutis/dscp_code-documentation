@@ -1,0 +1,46 @@
+﻿The competition organisers have provided us, along with a set of initial questions, with the relevant data.
+
+The data is about passenger flights in the US, from 1987 to 2008. There is one main series of csv files that contain the flights, where each file contains the data for a single year. Each file has 29 variables that capture the flight characteristics, with attention to delays, cancelations, and diversions. Here is the list:
+
+ 	Name 	Description
+1 	Year 	1987-2008
+2 	Month 	1-12
+3 	DayofMonth 	1-31
+4 	DayOfWeek 	1 (Monday) - 7 (Sunday)
+5 	DepTime 	actual departure time (local, hhmm)
+6 	CRSDepTime 	scheduled departure time (local, hhmm)
+7 	ArrTime 	actual arrival time (local, hhmm)
+8 	CRSArrTime 	scheduled arrival time (local, hhmm)
+9 	UniqueCarrier 	unique carrier code
+10 	FlightNum 	flight number
+11 	TailNum 	plane tail number
+12 	ActualElapsedTime 	in minutes
+13 	CRSElapsedTime 	in minutes
+14 	AirTime 	in minutes
+15 	ArrDelay 	arrival (to the destination) delay, in minutes
+16 	DepDelay 	departure (from the origin) delay, in minutes
+17 	Origin 	origin IATA airport code
+18 	Dest 	destination IATA airport code
+19 	Distance 	in miles
+20 	TaxiIn 	taxi in time, in minutes
+21 	TaxiOut 	taxi out time in minutes
+22 	Cancelled 	was the flight cancelled?
+23 	CancellationCode 	reason for cancellation (A = carrier, B = weather, C = NAS, D = security)
+24 	Diverted 	1 = yes, 0 = no
+25 	CarrierDelay 	in minutes
+26 	WeatherDelay 	in minutes
+27 	NASDelay 	in minutes
+28 	SecurityDelay 	in minutes
+29 	LateAircraftDelay 	in minutes
+
+The US Department of Transportation, recognises five different causes of delay, that map to the last five variables, which measure delay in minutes. For the rest, we can see that there is a pretty detailed 	description of each flight.
+
+There is also a set of three more csv files that contain additional pieces of information. 
+One contains information on the airports, and is connected to the flights files through the Origin and Destination variables, that contain the IATA airport code. In the airports file we find the IATA code along with information about the location of the airport.
+Second, is the carriers codes file that connects to the flights files through the unique carrier code. In that file we simply find the commercial name of the carrier.
+Last, the planes file that connects to the flights file through the TailNumber variable. Tail numbers are unique identifiers for each airplane. The planes files contain additional information for each single plane, such as model, engine type, etc.
+
+What becomes evident, is that we can have a rich dataset with which we can work and draw conclusions
+
+
+
