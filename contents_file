@@ -66,3 +66,18 @@ phase_5
 	output:
 	
 		- this very project report for iteration 1
+
+
+scraping_project:
+
+	wikipedia1:
+		A scrapy project folder with all the code for spider1
+
+	wikipedia2:
+		A scrapy project folder with all the code for spider2
+
+	wikipedia1_db.json ( the main document database )
+
+	wikipedia2_db.json ( the auxilliary document database )
+
+	scraping_wikipedia Jupyter Notebook ( The main locus of data wrangling and analysis )
